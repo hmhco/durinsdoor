@@ -9,7 +9,7 @@ npm install
 ```
 ##### Get your client ID and secret from the developer portal
 
-- https://developer.hmhco.com
+https://developer.hmhco.com
 
 ##### Configure app.js
 In the app's root directory locate a file named `app.js` and replace `'YOUR_CLIENT_ID'` and `'YOUR_CLIENT_SECRET'` at the top of the file.
