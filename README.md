@@ -1,4 +1,4 @@
-# Durins Door 
+# Durins Door
 A sample node express application that interacts with OpenId Connect and shows how to use HMH's public apis
 
 ## Configure and Run
@@ -13,6 +13,9 @@ https://developer.hmhco.com
 
 ##### Configure app.js
 In the app's root directory locate a file named `app.js` and replace `'YOUR_CLIENT_ID'` and `'YOUR_CLIENT_SECRET'` at the top of the file.
+
+##### Configure api.js
+In {app_root_dir}/routes/api.js replace `YOUR_Vnd-HMH-Api-Key` at the top of the file.
 
 ##### Run the app
 

@@ -27,7 +27,7 @@ router.get('/schools', function(req, res, next) { // call to HMH api
       }
       var requestPath;
       if (req.user.roles.indexOf('Instructor') != -1){
-        requestPath = 'http://ec2-54-144-153-235.compute-1.amazonaws.com/v2/staff/' + req.user.id + '/school';
+        requestPath = 'http://sandbox.api.hmhco.com/v2/staff/' + req.user.id + '/school';
       }else{
         requestPath = 'http://sandbox.api.hmhco.com/v2/students/' + req.user.id + '/school';
       }
