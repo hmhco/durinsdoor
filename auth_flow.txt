@@ -1,0 +1,82 @@
+0. get a client_id and client_secret
+
+1. get code from authorize endpoint.
+  # endpoint: GET /openid-connect/v2/authorize
+
+  # Query Params
+  ## response_type = code
+  ## redirect_uri
+  ## scope = openid
+  ## client_id
+
+  # Note: you should be redirecting to this url, not cURLing it - this curl will return HTML.
+  curl -i 'http://sandbox.api.hmhco.com/openid-connect/v2/authorize?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fhmh%2Fcallback&scope=openid&client_id=CLIENT_ID'
+
+  # when the user completes the page they will be redirected back to the redirect_uri with a query parameter 'code' that contains the authorization code required for the token call.
+
+2. get SIF from authorization code
+  # endpoint: POST /openid-connect/v2/token
+
+  # Headers
+  ## AUTH_CODE is a string = 'client_id:client_secret' base64 encoded. "Authorization: Basic AUTH_CODE"
+  ## content type = "Content-Type: application/x-www-form-urlencoded"
+
+  # Query Params
+  ## redirect_uri
+  ## client_id
+  ## grant_type = authorization_code
+  ## scope = openid
+  ## code
+
+  curl -i -X POST 'http://sandbox.api.hmhco.com/openid-connect/v2/token?grant_type=authorization_code&scope=openid&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fhmh%2Fcallback&client_id=CLIENT_ID&code=CODE_HERE' -H "Content-Type: application/x-www-form-urlencoded" -H "Authorization: Basic AUTH_CODE"
+
+  # this call will return
+  ## access_token
+  ## token_type
+  ## refresh_token
+  ## expires_in
+  ## scope
+  ## id_token (which is the code passed to the request)
+
+  # decoding the access token will provide more user information.
+  2a. split access_token on " "
+  2b. Base64 decode the string on the right side of the split
+  2c. split the result of 2b on "."
+  2d. each string from the result of 2c can be Base64 decoded.
+    # the three strings are claims, jwt, signature
+      # decoded claims contains: alg(algorithm), typ(type)
+      # decoded jwt contains:
+        # iss (issuer)
+        # aud (audience)
+        # iat (issued at)
+        # sub
+          # cn (common name)
+          # uid (username)
+          # uniqueIdentifier (user's refid)
+        # http://www.imsglobal.org/imspurl/lis/v1/vocab/person (array, roles)
+        # platform id
+        # client_id
+        # exp (expire at timestamp)
+
+3. refresh
+  # endpoint POST /openid-connect/v2/token
+
+  # Headers
+  ## AUTH_CODE is a string = 'client_id:client_secret' base64 encoded. "Authorization: Basic AUTH_CODE"
+  ## content type = "Content-Type: application/x-www-form-urlencoded"
+
+  # Query Params
+  ## client_id
+  ## grant_type = refresh_token
+  ## refresh_token
+  ## scope = openid
+
+  curl -i -X POST 'http://sandbox.api.hmhco.com/openid-connect/v2/token?client_id=CLIENT_ID&grant_type=refresh_token&scope=openid&refresh_token=REFRESH_TOKEN' -H "Content-Type: application/x-www-form-urlencoded" -H "Authorization: Basic AUTH_CODE"
+
+  # this call will return
+  ## access_token
+  ## token_type
+  ## refresh_token
+  ## expires_in
+  ## scope
+  ## id_token (which is the code passed to the request)
