@@ -105,28 +105,29 @@
   ``` javascript
   //javascript example
   function userFromSIFToken(accessToken){
-     var user = {};
-     var accessSplit = accessToken.split(' ');
-     var schema = accessSplit[0];
-     var sif = accessSplit[1];
-     var decodedSif = atob(sif);
-     var decodedSplit = decodedSif.split('.');
-     var claims = decodedSplit[0];
-     var encodedJwt = decodedSplit[1];
-     var signature = decodedSplit[2];
-     var decodedJwt = atob(encodedJwt);
-     var jwt = JSON.parse(decodedJwt);
-     var subKeyVals = jwt.sub.split(',');
-     var sub = {}; // will hold cn, uid, uniqueIdentifier
-     for(var keyVal in subKeyVals){
-       var split = subKeyVals[keyVal].split('=');
-       sub[split[0]] = split[1];
-     }
-     user.name = sub.cn;
-     user.username = sub.uid;
-     user.id = sub.uniqueIdentifier;
-     user.accessToken = accessToken;
-     user.refreshToken = refreshToken;
-     return user;
+    var user = {};
+    var accessSplit = accessToken.split(' ');
+    var schema = accessSplit[0];
+    var sif = accessSplit[1];
+    var decodedSif = atob(sif);
+    var decodedSplit = decodedSif.split('.');
+    var claims = decodedSplit[0];
+    var encodedJwt = decodedSplit[1];
+    var signature = decodedSplit[2];
+    var decodedJwt = atob(encodedJwt);
+    var jwt = JSON.parse(decodedJwt);
+    var subKeyVals = jwt.sub.split(',');
+    var sub = {}; // will hold cn, uid, uniqueIdentifier, o, dc
+    for(var keyVal in subKeyVals){
+      var split = subKeyVals[keyVal].split('=');
+      sub[split[0]] = split[1];
+    }
+    user.name = sub.cn;
+    user.username = sub.uid;
+    user.id = sub.uniqueIdentifier;
+    user.accessToken = accessToken;
+    user.refreshToken = refreshToken;
+    user.roles = jwt['http://www.imsglobal.org/imspurl/lis/v1/vocab/person'];
+      return user;
   }
   ```

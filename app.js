@@ -12,7 +12,9 @@ var passport = require('passport');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var auth = require('./routes/auth');
+var api = require('./routes/api');
 var atob = require('atob');
+var refresh = require('passport-oauth2-refresh');
 var app = express();
 
 // view engine setup
@@ -32,6 +34,7 @@ app.use(passport.session());
 app.use('/', routes);
 app.use('/users', users);
 app.use('/auth', auth);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -101,6 +104,7 @@ var strategy = new OAuth2Strategy({
     user.id = sub.uniqueIdentifier;
     user.accessToken = accessToken;
     user.refreshToken = refreshToken;
+    user.roles = jwt['http://www.imsglobal.org/imspurl/lis/v1/vocab/person'];
     done(null, user);
   }
 );
@@ -108,6 +112,7 @@ var strategy = new OAuth2Strategy({
 strategy.tokenParams = function(options){ return {scope: 'openid'}; };
 
 passport.use(strategy);
+refresh.use(strategy);
 
 passport.serializeUser(function(user, done) {
   done(null, user);
