@@ -77,46 +77,40 @@
   refresh_token
   expires_in
   scope
+  id_token
   ```
 
-4. Decode access for more user info.
-  - split access_token on " "
-  - Base64 decode the string on the right side of the split
-  - split the result of #2 on "."
-  - each string from the result of #3 can be Base64 decoded.
-
-    - the three strings are claims, jwt, signature
-        - decoded claims contains: alg(algorithm), typ(type)
-        - decoded jwt keys:
-        ```
-        iss (issuer)
-        aud (audience)
-        iat (issued at)
-        sub
-            cn (common name)
-            uid (username)
-            uniqueIdentifier (user's refid)
-        http://www.imsglobal.org/imspurl/lis/v1/vocab/person (array, roles)
-        platform id
-        client_id
-        exp (expire at timestamp)
-        ```
+4. Decode id_token for more user info.
+  The id_token is a JWT
+  - split the JWT on "."
+  - each string in the array can be Base64 decoded. The three strings are header, payload and signature
+  - decoded header contains: alg(algorithm), typ(type)
+  - decoded payload keys:
+    ```
+    iss (issuer)
+    aud (audience)
+    iat (issued at)
+    sub
+        cn (common name)
+        uid (username)
+        uniqueIdentifier (user's refid)
+    http://www.imsglobal.org/imspurl/lis/v1/vocab/person (array, roles)
+    platform id
+    client_id
+    exp (expire at timestamp)
+    ```
 
   ``` javascript
   //javascript example
-  function userFromSIFToken(accessToken){
+  function userFromIdToken(idToken){
     var user = {};
-    var accessSplit = accessToken.split(' ');
-    var schema = accessSplit[0];
-    var sif = accessSplit[1];
-    var decodedSif = atob(sif);
-    var decodedSplit = decodedSif.split('.');
-    var claims = decodedSplit[0];
-    var encodedJwt = decodedSplit[1];
+    var decodedSplit = idToken.split('.');
+    var header = decodedSplit[0];
+    var encodedPayload = decodedSplit[1];
     var signature = decodedSplit[2];
-    var decodedJwt = atob(encodedJwt);
-    var jwt = JSON.parse(decodedJwt);
-    var subKeyVals = jwt.sub.split(',');
+    var decodedPayload = atob(encodedPayload);
+    var payload = JSON.parse(decodedPayload);
+    var subKeyVals = payload.sub.split(',');
     var sub = {}; // will hold cn, uid, uniqueIdentifier, o, dc
     for(var keyVal in subKeyVals){
       var split = subKeyVals[keyVal].split('=');
@@ -127,7 +121,7 @@
     user.id = sub.uniqueIdentifier;
     user.accessToken = accessToken;
     user.refreshToken = refreshToken;
-    user.roles = jwt['http://www.imsglobal.org/imspurl/lis/v1/vocab/person'];
-      return user;
+    user.roles = payload['http://www.imsglobal.org/imspurl/lis/v1/vocab/person'];
+    return user;
   }
   ```
