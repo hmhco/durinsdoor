@@ -25,13 +25,7 @@ router.get('/schools', function(req, res, next) { // call to HMH api
       if(!retries){
         return sendErrorResponse();
       }
-      var requestPath;
-      if (req.user.roles.indexOf('Instructor') != -1){
-        requestPath = 'http://sandbox.api.hmhco.com/v2/staff/' + req.user.id + '/school';
-      }else{
-        requestPath = 'http://sandbox.api.hmhco.com/v2/students/' + req.user.id + '/school';
-      }
-
+      var requestPath = 'http://sandbox.api.hmhco.com/v3/schools';
       var options = {
         url: requestPath,
         headers: {
@@ -44,8 +38,8 @@ router.get('/schools', function(req, res, next) { // call to HMH api
       // send request
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          var data = JSON.parse(body);
-          res.render('school', {school: data.school, body: body});
+          var resp = JSON.parse(body);
+          res.render('school', {school: resp.data, body: body});
         }else{
           if (response.statusCode == 401){
             // unauthorized, try refresh and go.
