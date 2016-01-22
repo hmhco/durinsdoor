@@ -11,6 +11,8 @@ npm install
 
 https://developer.hmhco.com
 
+For use with the sample app you will want to create an application with a localhost redirect uri.
+
 ##### Configure app.js
 In the app's root directory locate a file named `app.js` and replace `'YOUR_CLIENT_ID'` and `'YOUR_CLIENT_SECRET'` at the top of the file.
 
