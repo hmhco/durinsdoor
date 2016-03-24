@@ -15,6 +15,7 @@ var auth = require('./routes/auth');
 var api = require('./routes/api');
 var atob = require('atob');
 var refresh = require('passport-oauth2-refresh');
+var https = require('https').globalAgent.options.rejectUnauthorized = false;
 var app = express();
 
 // view engine setup
