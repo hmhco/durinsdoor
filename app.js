@@ -1,6 +1,6 @@
 var client_id = 'YOUR_CLIENT_ID';
 var client_secret = 'YOUR_CLIENT_SECRET';
-
+var https = require('https').globalAgent.options.rejectUnauthorized = false;
 var express = require('express');
 var session = require('express-session');
 var path = require('path');
