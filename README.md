@@ -17,7 +17,7 @@ For use with the sample app you will want to create an application with a localh
 In the app's root directory locate a file named `app.js` and replace `'YOUR_CLIENT_ID'` and `'YOUR_CLIENT_SECRET'` at the top of the file.
 
 ##### Configure api.js
-In {app_root_dir}/routes/api.js replace `YOUR_Vnd-HMH-Api-Key` at the top of the file.
+In {app_root_dir}/routes/api.js replace `YOUR_Vnd-HMH-Api-Key` at the top of the file with the key from https://developer.hmhco.com/admin/applications
 
 ##### Run the app
 
