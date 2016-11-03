@@ -1,5 +1,9 @@
-var client_id = 'YOUR_CLIENT_ID';
-var client_secret = 'YOUR_CLIENT_SECRET';
+// These env specific variables are dynamically replaced during deployment (see jenkins config)
+var client_id = '48de553c-a4bc-4181-b6bf-736a9a00bf87.hmhco.com';
+var client_secret = 'dq1-zrCiVDa7XRuxqZbExYH1wIabIn-1OORK7cKxJgQJEtAeyYvBn6vWu4s';
+var oidc_base_url = 'http://int.oidc.marketplace.hmhco.com/openid-connect/v2';
+// ---
+
 var https = require('https').globalAgent.options.rejectUnauthorized = false;
 var express = require('express');
 var session = require('express-session');
@@ -71,8 +75,8 @@ app.use(function(err, req, res, next) {
 var OAuth2Strategy = require('passport-oauth2').Strategy;
 
 var strategy = new OAuth2Strategy({
-    authorizationURL: 'http://sandbox.api.hmhco.com/openid-connect/v2/authorize',
-    tokenURL: 'http://sandbox.api.hmhco.com/openid-connect/v2/token',
+    authorizationURL: `${oidc_base_url}/authorize`,
+    tokenURL: `${oidc_base_url}/token`,
     clientID: client_id,
     clientSecret: client_secret,
     callbackURL: '/auth/hmh/callback',
@@ -83,28 +87,9 @@ var strategy = new OAuth2Strategy({
   function(accessToken, refreshToken, profile, done) {
     // decode sif token, set up some user info.
     var user = {};
-    var accessSplit = accessToken.split(' ');
-    var schema = accessSplit[0];
-    var sif = accessSplit[1];
-    var decodedSif = atob(sif);
-    var decodedSplit = decodedSif.split('.');
-    var claims = decodedSplit[0];
-    var encodedJwt = decodedSplit[1];
-    var signature = decodedSplit[2];
-    var decodedJwt = atob(encodedJwt);
-    var jwt = JSON.parse(decodedJwt);
-    var subKeyVals = jwt.sub.split(',');
-    var sub = {}; // will hold cn, uid, uniqueIdentifier, o, dc
-    for(var keyVal in subKeyVals){
-      var split = subKeyVals[keyVal].split('=');
-      sub[split[0]] = split[1];
-    }
-    user.name = sub.cn;
-    user.username = sub.uid;
-    user.id = sub.uniqueIdentifier;
     user.accessToken = accessToken;
     user.refreshToken = refreshToken;
-    user.roles = jwt['http://www.imsglobal.org/imspurl/lis/v1/vocab/person'];
+
     done(null, user);
   }
 );

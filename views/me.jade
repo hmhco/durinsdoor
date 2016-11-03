@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  script(type='text/javascript'). 
+    window.onload = function() {
+        document.getElementById("data").innerHTML = JSON.stringify(!{data}, undefined, 2);
+      }
+
+  div.content
+    div
+      p 
+        b My Info
+        pre#data
+      
