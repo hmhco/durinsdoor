@@ -3,13 +3,7 @@ extends layout
 block content
   div.content
     div 
-      h1.welcome Welcome #{user.name}!
-    div 
-      label User name:
-      input.mb10(type='text' value='#{user.username}')
-    div 
-      label Id: 
-      input.mb10.refresh_input(type='text' value='#{user.id}')
+      h1.welcome Welcome!
     div 
       label Access Token: 
       input.mb10.sif_input(type='text' value='#{user.accessToken}')
@@ -17,5 +11,5 @@ block content
       label Refresh Token: 
       input.refresh_input(type='text' value='#{user.refreshToken}')
     div
-      a(href="/api/schools") Get School
+      a(href="/api/me" target="_blank") About Me
   
