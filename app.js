@@ -75,8 +75,8 @@ app.use(function(err, req, res, next) {
 var OAuth2Strategy = require('passport-oauth2').Strategy;
 
 var strategy = new OAuth2Strategy({
-    authorizationURL: `${oidc_base_url}/authorize`,
-    tokenURL: `${oidc_base_url}/token`,
+    authorizationURL: oidc_base_url + '/authorize',
+    tokenURL: oidc_base_url + '/token',
     clientID: client_id,
     clientSecret: client_secret,
     callbackURL: '/auth/hmh/callback',

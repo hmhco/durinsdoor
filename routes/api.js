@@ -27,7 +27,7 @@ router.get('/me', function(req, res, next) { // call to HMH api
       if(!retries){
         return sendErrorResponse();
       }
-      var requestPath = `${api_base_url}/me`;
+      var requestPath = api_base_url + '/me';
       var options = {
         url: requestPath,
         headers: {
