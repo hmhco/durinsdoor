@@ -1,6 +1,6 @@
 // These env specific variables are dynamically replaced during deployment (see jenkins config)
-var vnd_hmh_api_key = 'e264dedf0978e02f79305a1df79c7006';
-var api_base_url = 'http://int.graph.hmhco.com/v1';
+var vnd_hmh_api_key = '<KEY>';
+var api_base_url = '<URL>';
 // ---
 
 var express = require('express');
