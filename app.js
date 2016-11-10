@@ -1,7 +1,7 @@
 // These env specific variables are dynamically replaced during deployment (see jenkins config)
-var client_id = '48de553c-a4bc-4181-b6bf-736a9a00bf87.hmhco.com';
-var client_secret = 'dq1-zrCiVDa7XRuxqZbExYH1wIabIn-1OORK7cKxJgQJEtAeyYvBn6vWu4s';
-var oidc_base_url = 'http://int.oidc.marketplace.hmhco.com/openid-connect/v2';
+var client_id = '<ID>';
+var client_secret = '<SECRET>';
+var api_base_url = '<URL>';
 // ---
 
 var https = require('https').globalAgent.options.rejectUnauthorized = false;
@@ -75,8 +75,8 @@ app.use(function(err, req, res, next) {
 var OAuth2Strategy = require('passport-oauth2').Strategy;
 
 var strategy = new OAuth2Strategy({
-    authorizationURL: oidc_base_url + '/authorize',
-    tokenURL: oidc_base_url + '/token',
+    authorizationURL: api_base_url + '/authorize',
+    tokenURL: api_base_url + '/token',
     clientID: client_id,
     clientSecret: client_secret,
     callbackURL: '/auth/hmh/callback',
