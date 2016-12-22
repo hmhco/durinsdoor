@@ -1,11 +1,13 @@
-var vnd_hmh_api_key = 'YOUR_Vnd-HMH-Api-Key';
+// These env specific variables are dynamically replaced during deployment (see jenkins config)
+var vnd_hmh_api_key = '<KEY>';
+var api_base_url = '<URL>';
+// ---
 
 var express = require('express');
 var passport = require('passport');
 var request = require('request');
 var refresh = require('passport-oauth2-refresh');
 var router = express.Router();
-
 
 router.get('/', function(req, res, next) {
   if (req.user){
@@ -15,7 +17,7 @@ router.get('/', function(req, res, next) {
   }
 });
 
-router.get('/schools', function(req, res, next) { // call to HMH api
+router.get('/me', function(req, res, next) { // call to HMH api
   if (req.user){
 
     // prepare request
@@ -25,7 +27,7 @@ router.get('/schools', function(req, res, next) { // call to HMH api
       if(!retries){
         return sendErrorResponse();
       }
-      var requestPath = 'http://sandbox.api.hmhco.com/v3/schools';
+      var requestPath = api_base_url + '/me';
       var options = {
         url: requestPath,
         headers: {
@@ -39,7 +41,8 @@ router.get('/schools', function(req, res, next) { // call to HMH api
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           var resp = JSON.parse(body);
-          res.render('school', {school: resp.data, body: body});
+          var data = JSON.stringify(resp.data, null, 2)
+          res.render('me', {data: data});
         }else{
           if (response.statusCode == 401){
             // unauthorized, try refresh and go.
@@ -50,7 +53,7 @@ router.get('/schools', function(req, res, next) { // call to HMH api
               makeRequest();
             });
           }else{
-            res.send("error fetching schools for " + req.user.username + "  ::  " + response.statusCode);
+            res.send("error fetching data; " + response.statusCode);
           }
         }
       });
