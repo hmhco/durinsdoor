@@ -3,7 +3,7 @@
 
 1. Get `code` from authorize endpoint.
 
-  `GET /openid-connect/v2/authorize`
+  `GET /v4/authorize`
 
   ###### Query Params
   ```
@@ -14,13 +14,13 @@
   ```
   **Note**: you should be redirecting to this url, not curling it - this curl will return HTML.
 
-  `curl -i 'http://sandbox.api.hmhco.com/openid-connect/v2/authorize?response_type=code&redirect_uri=YOUR_CALLBACK&scope=openid&client_id=CLIENT_ID'`
+  `curl -i 'http://sandbox.graph.hmhco.com/v4/authorize?response_type=code&redirect_uri=YOUR_CALLBACK&scope=openid&client_id=CLIENT_ID'`
 
   When the user completes the page they will be redirected back to the redirect_uri with a query parameter 'code' that contains the authorization code required for the token call.
 
 2. Get SIF from authorization code
 
-  `POST /openid-connect/v2/token`
+  `POST /v4/token`
 
   ###### Headers
   ```
@@ -41,7 +41,7 @@
   scope=openid
   code
   ```
-  `curl -i -X POST 'http://sandbox.api.hmhco.com/openid-connect/v2/token?grant_type=authorization_code&scope=openid&redirect_uri=YOUR_CALLBACK&client_id=CLIENT_ID&code=CODE_HERE' -H "Content-Type: application/x-www-form-urlencoded" -H "Authorization: Basic authCode"`
+  `curl -i -X POST 'http://sandbox.graph.hmhco.com/v4/token?grant_type=authorization_code&scope=openid&redirect_uri=YOUR_CALLBACK&client_id=CLIENT_ID&code=CODE_HERE' -H "Content-Type: application/x-www-form-urlencoded" -H "Authorization: Basic authCode"`
 
   ###### Response Data
   ```
@@ -54,7 +54,7 @@
   ```
 3. Refresh
 
-  `POST /openid-connect/v2/token`
+  `POST /v4/token`
 
   ###### Headers
   ```
@@ -68,7 +68,7 @@
   scope=openid
   grant_type=refresh_token
   ```
-  `curl -i -X POST 'http://sandbox.api.hmhco.com/openid-connect/v2/token?client_id=CLIENT_ID&grant_type=refresh_token&scope=openid&refresh_token=REFRESH_TOKEN' -H "Content-Type: application/x-www-form-urlencoded" -H "Authorization: Basic authCode"`
+  `curl -i -X POST 'http://sandbox.graph.hmhco.com/v4/token?client_id=CLIENT_ID&grant_type=refresh_token&scope=openid&refresh_token=REFRESH_TOKEN' -H "Content-Type: application/x-www-form-urlencoded" -H "Authorization: Basic authCode"`
 
   ###### Response Data
   ```
@@ -80,48 +80,5 @@
   id_token
   ```
 
-4. Decode id_token for more user info.
-  The id_token is a JWT
-  - split the JWT on "."
-  - each string in the array can be Base64 decoded. The three strings are header, payload and signature
-  - decoded header contains: alg(algorithm), typ(type)
-  - decoded payload keys:
-    ```
-    iss (issuer)
-    aud (audience)
-    iat (issued at)
-    sub
-        cn (common name)
-        uid (username)
-        uniqueIdentifier (user's refid)
-    http://www.imsglobal.org/imspurl/lis/v1/vocab/person (array, roles)
-    platform id
-    client_id
-    exp (expire at timestamp)
-    ```
-
-  ``` javascript
-  //javascript example
-  function userFromIdToken(idToken){
-    var user = {};
-    var decodedSplit = idToken.split('.');
-    var header = decodedSplit[0];
-    var encodedPayload = decodedSplit[1];
-    var signature = decodedSplit[2];
-    var decodedPayload = atob(encodedPayload);
-    var payload = JSON.parse(decodedPayload);
-    var subKeyVals = payload.sub.split(',');
-    var sub = {}; // will hold cn, uid, uniqueIdentifier, o, dc
-    for(var keyVal in subKeyVals){
-      var split = subKeyVals[keyVal].split('=');
-      sub[split[0]] = split[1];
-    }
-    user.name = sub.cn;
-    user.username = sub.uid;
-    user.id = sub.uniqueIdentifier;
-    user.accessToken = accessToken;
-    user.refreshToken = refreshToken;
-    user.roles = payload['http://www.imsglobal.org/imspurl/lis/v1/vocab/person'];
-    return user;
-  }
-  ```
+4. The id_token and access_token is encrypted, use the /me endpoint to get user info
+  
