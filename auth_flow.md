@@ -89,3 +89,17 @@
 4. The id_token and access_token is encrypted. To get user info, use the `/me` endpoint.
 
   `curl -X GET -H "Authorization: SIF_HMACSHA256 <SIF_ACCESS_TOKEN>" -H "Vnd-HMH-Api-Key: <USER_KEY>" "http://sandbox.graph.hmhco.com/v4/me"`
+
+
+### API Endpoints
+#### Sandbox
+All API requests use the same base URL;
+
+    http://sandbox.graph.hmhco.com/<version>
+    ex. http://sandbox.graph.hmhco.com/v4/students?page[number]=3&page[size]=5
+
+This applies to the OIDC endpoints as well;
+
+    ex.
+    http://sandbox.graph.hmhco.com/v4/authorize
+    http://sandbox.graph.hmhco.com/v4/token
