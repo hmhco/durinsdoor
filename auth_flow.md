@@ -1,5 +1,5 @@
 # How to use the authorize flow
-0. Obtain a `client_id`, `client_secret` and `user_key` by signing up at the [developer portal](https://developer.hmhco.com).
+**Prerequisite**: Obtain a `client_id`, `client_secret` and `user_key` by signing up and registering your application at the [developer portal](https://developer.hmhco.com).
 
 1. Get 'authorization code' from authorize endpoint.
 
