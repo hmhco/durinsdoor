@@ -28,10 +28,12 @@
   ```
   **Note**: `<AUTH>` is a Base64 encoded string in the following format; `'<CLIENT_ID>:<CLIENT_SECRET>'`
 
-        example:
-        CLIENT_ID = 12345-abcd-4004-bea1-421e284a321b.hmhco.com
-        CLIENT_SECRET = Hu33njfkdTusfn_3eHjkhfs92rhsjkv'
-        AUTH = Base64('12345-abcd-4004-bea1-421e284a321b.hmhco.com:Hu33njfkdTusfn_3eHjkhfs92rhsjkv') = 'MTIzNDUtYWJjZC00MDA0LWJlYTEtNDIxZTI4NGEzMjFiLmhtaGNvLmNvbTpIdTMzbmpma2RUdXNmbl8zZUhqa2hmczkycmhzamt2'
+  ```
+  example:
+  CLIENT_ID = 12345-abcd-4004-bea1-421e284a321b.hmhco.com
+  CLIENT_SECRET = Hu33njfkdTusfn_3eHjkhfs92rhsjkv'
+  AUTH = Base64('12345-abcd-4004-bea1-421e284a321b.hmhco.com:Hu33njfkdTusfn_3eHjkhfs92rhsjkv') = 'MTIzNDUtYWJjZC00MDA0LWJlYTEtNDIxZTI4NGEzMjFiLmhtaGNvLmNvbTpIdTMzbmpma2RUdXNmbl8zZUhqa2hmczkycmhzamt2'
+  ```
 
   ``` javascript
   // javascript example
