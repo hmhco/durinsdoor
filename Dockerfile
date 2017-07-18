@@ -4,7 +4,9 @@ MAINTAINER HMH
 RUN apt-get update
 
 # install nodejs and npm
-RUN apt-get install -y nodejs-legacy npm git git-core
+RUN apt-get install -y nodejs-legacy npm git git-core curl
+RUN npm install -g n
+RUN n latest
 
 #Add supervisor
 RUN apt-get install supervisor -y
